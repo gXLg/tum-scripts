@@ -1,0 +1,5 @@
+#!/bin/bash
+
+cookie="$(cat cookie)"
+
+curl -X POST "https://scoreboard.sec.in.tum.de/flag" -b "$cookie" --data "flag=$1"

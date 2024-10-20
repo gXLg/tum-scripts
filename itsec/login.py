@@ -1,15 +1,9 @@
 # Login into scoreboard using shibboleth
 
-# Put your shib credentials in a file called 'login.txt' in following format:
-# <username/email> <new line>
-# <password>
-
-# Login cookies will be saved in a file called 'cookie'
-
 import requests
 from bs4 import BeautifulSoup as BS
 
-with open("login.txt", "r") as f:
+with open("shib.txt", "r") as f:
   username, password = f.read().strip().split("\n")
 
 with requests.Session() as s:
