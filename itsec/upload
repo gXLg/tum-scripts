@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+if [[ ! "$1" ]]; then
+  echo "No task selected!"
+  exit 1
+fi
+
+x=task_$(printf "%03d\n" "$1")
+
+if [[ ! -d $x ]]; then
+  echo "This task does not exists!"
+  exit 1
+fi
+
+cookie="$(cat cookie)"
+curl -X POST "https://scoreboard.sec.in.tum.de/tasks/$1/upload" -b "$cookie" -F fileupload=@$x/exploit.py
