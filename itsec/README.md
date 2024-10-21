@@ -23,3 +23,6 @@ searches for a flag using regex and prints it out.
 
 # Submit
 Submit a flag using `submit <flag>`.
+
+# Upload
+Upload your code using `upload <number>`
