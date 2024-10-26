@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [[ ! "$1" ]]; then
+  echo "No task selected!"
+  exit 1
+fi
+
+x=task_$(printf "%03d\n" "$1")
+
+if [[ -d $x ]]; then
+  echo "This task already exists!"
+  exit 1
+fi
+
+echo Downloading Task $x
+cookie="$(cat cookie)"
+
+mkdir $x
+curl "https://scoreboard.sec.in.tum.de/tasks/$1/dl" -o task.zip -b "$cookie"
+unzip task.zip -d $x
+rm task.zip
+
+url=$(curl "https://scoreboard.sec.in.tum.de/tasks/$1" -b "$cookie" | grep -Eo 'href="(.*)">\1' | grep -Eo '[^>]*$')
+echo "$url" > $x/URL.txt
