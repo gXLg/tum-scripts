@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 if [[ ! "$1" ]]; then
   echo "No task selected!"
   exit 1
@@ -13,11 +12,5 @@ if [[ ! -d $x ]]; then
   exit 1
 fi
 
-if [[ ! "$2" ]]; then
-  file="exploit.py"
-else
-  file="$2"
-fi
-
 cookie="$(cat cookie)"
-curl -X POST "https://scoreboard.sec.in.tum.de/tasks/$1/upload" -b "$cookie" -F fileupload=@$x/$file
+curl -X POST "https://scoreboard.sec.in.tum.de/tasks/$1/upload" -b "$cookie" -F fileupload=@$x/"pwn_students.py"
