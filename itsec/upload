@@ -12,5 +12,11 @@ if [[ ! -d $x ]]; then
   exit 1
 fi
 
+if [[ -f "$x/pwn-students.py" ]]; then
+  file="pwn-students.py"
+else
+  file="pwn_students.py"
+fi
+
 cookie="$(cat cookie)"
-curl -X POST "https://scoreboard.sec.in.tum.de/tasks/$1/upload" -b "$cookie" -F fileupload=@$x/"pwn_students.py"
+curl -X POST "https://scoreboard.sec.in.tum.de/tasks/$1/upload" -b "$cookie" -F fileupload=@"$x/$file"
