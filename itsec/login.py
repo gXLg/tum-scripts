@@ -8,7 +8,8 @@ with open("shib.txt", "r") as f:
 
 with requests.Session() as s:
   # landing page
-  r = s.get("https://scoreboard.sec.in.tum.de/shib-login")
+  r = s.get("https://scoreboard.sec.in.tum.de/shib-login", headers={"User-Agent": "Mozilla/5.0"})
+  print("Shibboleth SSO")
   b = BS(r.text, "html.parser")
   url = "https://login.tum.de" + b.find("form", { "name": "form1" })["action"]
   data = {

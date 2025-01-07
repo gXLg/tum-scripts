@@ -24,8 +24,13 @@ inside the task folder.
 
 ## Submit
 Submit a flag using `submit <flag>`.
+It will output the feedback provided on the page, which
+can be one of three things:
+* Wrong flag
+* An already used flag
+* Correct flag (+ name of the task)
 
 ## Upload
-Upload your code using `upload <number>`.
-This will upload the file `pwn_students.py`
-from your task folder.
+Upload your code using `upload <number> [file]`.
+This will upload the file `pwn_students.py` or `pwn-students.py`
+from your task folder or `file` if provided.

@@ -12,10 +12,14 @@ if [[ ! -d $x ]]; then
   exit 1
 fi
 
-if [[ -f "$x/pwn-students.py" ]]; then
-  file="pwn-students.py"
+if [[ ! "$2" ]]; then
+  if [[ -f "$x/pwn-students.py" ]]; then
+    file="pwn-students.py"
+  else
+    file="pwn_students.py"
+  fi
 else
-  file="pwn_students.py"
+  file="$2"
 fi
 
 cookie="$(cat cookie)"

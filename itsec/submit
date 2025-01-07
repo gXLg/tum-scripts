@@ -2,4 +2,13 @@
 
 cookie="$(cat cookie)"
 
-curl -X POST "https://scoreboard.sec.in.tum.de/flag" -b "$cookie" --data "flag=$1"
+curl -sX POST "https://scoreboard.sec.in.tum.de/flag" -b "$cookie" --data "flag=$1" -c tmp_cookie > /dev/null
+html=$(curl -sX GET "https://scoreboard.sec.in.tum.de/scoreboard" -b tmp_cookie)
+rm tmp_cookie
+
+if (echo "$html" | grep "<div class=\"alert-message\">" > /dev/null); then
+  echo "$html" | grep -Eo "[<]div class=\"alert-message\"[>](.*?)[<]/" | cut -d ">" -f 2 | cut -d "<" -f 1
+elif (echo "$html" | grep "<div class=\"alert-success\">" > /dev/null); then
+  echo "$html" | grep -Eo "[<]div class=\"alert-success\"[>](.*?)[<]/" | cut -d ">" -f 2 | cut -d "<" -f 1
+  echo "$html" | grep -Eo "[<]b[>]Rate this task [(](.*?)[)][<]/b[>]" | cut -d "(" -f 2 | cut -d ")" -f 1
+fi
