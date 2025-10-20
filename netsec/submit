@@ -1,0 +1,22 @@
+#!/bin/bash
+
+cookie="$(cat ../cookie)"
+
+if [[ -f "$1" ]]; then
+  flag=$(python "$1" | grep -Eo 'flag\{.*?\}')
+else
+  flag="$1"
+fi
+
+echo "Submitting '$flag'..."
+
+curl -sX POST "https://netsec.net.in.tum.de/flag" -b "$cookie" --data "flag=$flag" -c tmp_cookie > /dev/null
+html=$(curl -sX GET "https://netsec.net.in.tum.de/scoreboard" -b tmp_cookie)
+rm tmp_cookie
+
+if (echo "$html" | grep "<div class=\"alert-message\">" > /dev/null); then
+  echo "$html" | grep -Eo "[<]div class=\"alert-message\"[>](.*?)[<]/" | cut -d ">" -f 2 | cut -d "<" -f 1
+elif (echo "$html" | grep "<div class=\"alert-success\">" > /dev/null); then
+  echo "$html" | grep -Eo "[<]div class=\"alert-success\"[>](.*?)[<]/" | cut -d ">" -f 2 | cut -d "<" -f 1
+  echo "$html" | grep -Eo "[<]b[>]Rate this task [(](.*?)[)][<]/b[>]" | cut -d "(" -f 2 | cut -d ")" -f 1
+fi

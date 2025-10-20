@@ -1,0 +1,48 @@
+#!/bin/bash
+
+if [[ ! "$1" ]]; then
+  echo "No task selected!"
+  exit 1
+fi
+
+x=task_$(printf "%03d\n" "$1")
+
+if [[ -d $x ]]; then
+  echo "This task already exists!"
+  exit 1
+fi
+
+echo Downloading Task $x
+cookie="$(cat cookie)"
+if [[ "$cookie" == "" ]]; then
+  echo "No cookie obtained"
+  exit 1
+fi
+
+mkdir $x
+curl "https://netsec.net.in.tum.de/tasks/$1/dl" -o task.zip -b "$cookie" || echo lol
+if ! unzip task.zip -d $x; then
+  echo "Task not found on the server"
+  rm -r $x
+  rm task.zip
+  exit 1
+fi
+rm task.zip
+
+html=$(curl "https://netsec.net.in.tum.de/tasks/$1" -b "$cookie")
+
+host=$(echo "$html" | grep -Eo '<code>[a-z]+[.][a-z][a-z.]+<' | cut -d">" -f2 | cut -d"<" -f1)
+port=$(echo "$html" | grep -Eo '<code>[1-9][0-9]{3,4}<' | cut -d">" -f2 | cut -d"<" -f1)
+if [[ "$port" == "" ]]; then
+  port=-1
+fi
+url=$(echo "$html" | grep -Eo 'href="(.*)">\1' | grep -Eo '[^>]*$')
+pw=$(echo "$html" | grep -Eo "Passwor[dt]: [0-9a-f]*?" | cut -d " " -f 2)
+cat <<EOF > $x/header.txt
+import re
+flag = lambda x: print(re.findall(r'flag\{.*?\}', x)[0])
+URL = "$url"
+HOST = "$host"
+PORT = $port
+PASSWORD = "$pw"
+EOF
