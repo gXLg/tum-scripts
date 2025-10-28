@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+CRED="$(cat shib.txt)"
+ORIG="$(pwd -P)"
+cd "$(dirname $0)"/..
+COOKIE=$(echo "$CRED" | python -m "shibboleth" itsec)
+cd "$ORIG"
+echo "$COOKIE" > cookie
+echo "Cookies saved to the file 'cookie'"

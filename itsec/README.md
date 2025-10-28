@@ -1,7 +1,7 @@
 # IT Security
 
 ## Login
-Obtain/refresh your login cookie by executing `login.py`.
+Obtain/refresh your login cookie by executing `login`.
 
 Put your shib credentials in a file called `shib.txt`
 in following format:
@@ -34,3 +34,15 @@ can be one of three things:
 Upload your code using `upload <number> [file]`.
 This will upload the file `pwn_students.py` or `pwn-students.py`
 from your task folder or `file` if provided.
+
+## Polling
+If you are participating in the challenge and want to compete
+for the fastest flag capture, but the current course moderators
+are unpunctual, delay the release or the release time is not known,
+you can use the following line with an alert of your choice to notify
+you when the task is released:
+```
+while ! download <task_number>; do sleep 5; done;
+# a visible or audible alert like:
+mpv --no-video ~/Downloads/alert.mp3
+```
