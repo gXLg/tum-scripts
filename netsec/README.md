@@ -52,3 +52,54 @@ while ! download <task_number>; do sleep 5; done;
 # a visible or audible alert like:
 mpv --no-video ~/Downloads/alert.mp3
 ```
+
+## Team ID
+During the exercises, it occurred that you may need your Team ID.
+If you have changed your team name, then it is not possible to find
+your ID visually anywhere.
+
+For this case, you may use the following python script
+to find out your original Team ID:
+```py
+from requests import Session
+from bs4 import BeautifulSoup as BS
+
+# provided in the parent folder
+from shibboleth import login
+
+username = "" # TODO
+password = "" # TODO
+
+cookies = login("netsec", username, password)
+
+BASE = "https://netsec.net.in.tum.de"
+with Session() as s:
+  s.cookies = cookies
+
+  r = s.get(BASE + "/team")
+  b = BS(r.text, "html.parser")
+  current = b.find("input", { "name": "teamname" })["value"]
+  print("Current team name:", current)
+
+  number = 1
+  while True:
+    r = s.post(BASE + "/team/changename", data={"teamname": f"Team {number}"})
+    b = BS(r.text, "html.parser")
+    if b.find("div", { "class": "alert-message" }) is None:
+      print("Team ID found:", number)
+      print("Restoring team name...")
+      s.post(BASE + "/team/changename", data={"teamname": current})
+      break
+    number += 1
+```
+
+The module `shibboleth` is provided in the parent folder.
+You can either:
+```
+ln -s <shib path> ./shibboleth
+python script.py
+```
+or
+```
+PYTHONPATH="<full path to tum-scripts>:$PYTHONPATH" python script.py
+```
